@@ -21,6 +21,7 @@
   this.index = 0
   this.time = null
   this.times = []
+  this.time = new Date()
   this.answers = []
   this.questions = [
     "what is 42?",
@@ -30,19 +31,24 @@
     question: ''
   })
 
-  this.connected = async () => {
+  this.connected = () => {
     this.render({ question: this.questions[0] })
   }
 
-  this.submit = (event) => {
+  this.submit = async (event) => {
+    event.preventDefault()
     this.answers[this.index] = event.target.value
+    this.times[this.index] = (new Date()) - this.time
+    this.time = new Date()
     if (this.questions.length > this.index + 1) {
       this.index++
       this.render({ question: this.questions[this.index] })
     }
     else {
-      console.info('finished')
-      page('/end')
+      const data = { answers: this.answers, times: this.times }
+      const response = await api(`/assignment/${this.state.key}/complete`, { data })
+      if (response.ok) page('/end')
+      else alert("Can't save your data right now. Keep this window and try a little later.")
     }
   }
 </script>

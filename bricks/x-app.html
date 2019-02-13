@@ -6,8 +6,9 @@
   </header>
 
   <main>
-    <x-test :if="this.page === 'test'"></x-test>
-    <error-404 :if="this.page === 'error'"></error-404>
+    <x-test :if="this.page === 'test'" key="${ this.key }"></x-test>
+    <x-end :if="this.page === 'end'"></x-end>
+    <error-404 :if="this.page === 'error'" error="${ this.error }"></error-404>
   </main>
 
   <footer>
@@ -24,10 +25,14 @@
     user: {}
   })
 
-  page('/:key', async () => {
-    const response = api(`/assignment/${key}`)
-    this.render({ page: 'test' }
-  ))
+  page('/end', (req, res) => this.render({ page: 'end' }))
+
+  page('/:key', async (req, res) => {
+    this.state.key = req.params.key
+    const response = await api(`/assignment/${req.params.key}`)
+    if (response.ok && response.data.status === 'pending') this.render({ page: 'test' })
+    else this.render({ page: 'error', error: "The link is invalid or outdated." })
+  })
 
   page('*', () => this.render({ page: 'error' }))
 

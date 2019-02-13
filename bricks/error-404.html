@@ -1,7 +1,8 @@
 <template>
   <div class=block>
-    <h1>Page not found</h1>
-    <p>The page does not exist.</p>
+    <h1>Can't access the page</h1>
+    <p :if="!this.error">The page does not exist.</p>
+    <p :if="this.error">${ this.error }.</p>
   </div>
 </template>
 
