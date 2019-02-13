@@ -1,0 +1,52 @@
+<template>
+  <form class="block">
+    <ul>
+      <li>Absolutely True</li>
+      <li>True</li>
+      <li>Sometimes True or False</li>
+      <li>False</li>
+      <li>Absolutely False</li>
+    </ul>
+
+    <p>${ this.question }</p>
+    <button on:click="{ this.submit }" value=1>1</button>
+    <button on:click="{ this.submit }" value=2>2</button>
+    <button on:click="{ this.submit }" value=3>3</button>
+    <button on:click="{ this.submit }" value=4>4</button>
+    <button on:click="{ this.submit }" value=5>5</button>
+  </form>
+</template>
+
+<script>
+  this.index = 0
+  this.time = null
+  this.times = []
+  this.answers = []
+  this.questions = [
+    "what is 42?",
+    "Who's D?"
+  ]
+  this.setState({
+    question: ''
+  })
+
+  this.connected = async () => {
+    this.render({ question: this.questions[0] })
+  }
+
+  this.submit = (event) => {
+    this.answers[this.index] = event.target.value
+    if (this.questions.length > this.index + 1) {
+      this.index++
+      this.render({ question: this.questions[this.index] })
+    }
+    else {
+      console.info('finished')
+      page('/end')
+    }
+  }
+</script>
+
+<style>
+  @import url('/assets/css/main.css')
+</style>

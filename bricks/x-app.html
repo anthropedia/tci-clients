@@ -1,0 +1,60 @@
+<template page>
+  <header>
+    <h1 id=logo><a href="/">
+      <img src=https://assets.tci.anthropedia.org/images/anthropedia.svg alt="Anthropedia Foundation">
+    </a></h1>
+  </header>
+
+  <main>
+    <x-test :if="this.page === 'test'"></x-test>
+    <error-404 :if="this.page === 'error'"></error-404>
+  </main>
+
+  <footer>
+    ANTHROPEDIA™ FOUNDATION is a U.S. registered 501(c)(3) tax-deductible nonprofit charity<br>
+    ©2019 ANTHROPEDIA™ FOUNDATION all rights reserved.
+  </footer>
+</template>
+
+<script>
+  this.setState({
+    page: '',
+    clients: [],
+    clientId: null,
+    user: {}
+  })
+
+  page('/:key', async () => {
+    const response = api(`/assignment/${key}`)
+    this.render({ page: 'test' }
+  ))
+
+  page('*', () => this.render({ page: 'error' }))
+
+  page({ hashbang: true })
+</script>
+
+<style>
+  header {
+    padding: .1rem 1rem;
+    background-color: var(--white-background);
+    box-shadow: .3rem 0 .5rem rgba(0, 0, 0, .4);
+    position: sticky;
+    top: 0;
+    z-index: 3;
+  }
+  #logo {
+    width: 5rem;
+  }
+  #logo a,
+  #logo img {
+    display: inline-block;
+    width: 100%;
+  }
+
+  footer {
+    color: white;
+    padding: 1rem;
+    font-size: .6rem;
+  }
+</style>

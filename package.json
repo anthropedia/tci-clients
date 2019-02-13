@@ -1,0 +1,25 @@
+{
+  "name": "tci-clients",
+  "version": "0.1.0",
+  "description": "TCI for clients. Run tests online.",
+  "main": "index.html",
+  "scripts": {
+    "start": "concurrently 'npm run watch' 'live-server --no-browser --port=8081'",
+    "watch": "LEGO_PATH=./lego/index.js lego bricks/ dist/bricks.js -w",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/anthropedia/tci/clients"
+  },
+  "author": "Vincent Agnano",
+  "license": "MIT",
+  "dependencies": {
+    "@polight/lego": "*",
+    "jsdom": "*"
+  },
+  "devDependencies": {
+    "concurrently": "*",
+    "live-server": "*"
+  }
+}
