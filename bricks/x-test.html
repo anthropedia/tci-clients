@@ -31,7 +31,9 @@
     question: ''
   })
 
-  this.connected = () => {
+  this.connected = async () => {
+    const response = await(`/assignment/${this.state.key}/questions`)
+    this.questions = response.data
     this.render({ question: this.questions[0] })
   }
 
