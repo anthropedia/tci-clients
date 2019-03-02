@@ -1,4 +1,4 @@
-<template questions>
+<template questions key>
   <form class="block">
     <ol>
       <li>Absolutely True</li>
@@ -24,13 +24,14 @@
   this.time = new Date()
   this.answers = []
   this.setState({
+    key: "",
     questions: [],
     question: ''
   })
 
   this.changed = () => {
-    if (this.state.question) return
-    this.render({ question: this.state.questions[0] })
+    this.state.question = this.state.questions[0]
+    this.render()
   }
 
   this.submit = (event) => {
