@@ -6,9 +6,11 @@
   </header>
 
   <main>
-    <x-test :if="this.page === 'test'" key="${ this.key }"></x-test>
+    <x-introduction :if="this.page === 'introduction'" key="${ this.key }"></x-introduction>
+    <x-test :if="this.page === 'test'" key="${ this.key }" questions="${ this.questions }"></x-test>
     <x-end :if="this.page === 'end'"></x-end>
     <error-404 :if="this.page === 'error'" error="${ this.error }"></error-404>
+    <p
   </main>
 
   <footer>
@@ -22,16 +24,24 @@
     page: '',
     clients: [],
     clientId: null,
-    user: {}
+    user: {},
+    questions: [],
   })
 
-  page('/end', (req, res) => this.render({ page: 'end' }))
+  page('/end', () => this.render({ page: 'end' }))
 
-  page('/:key', async (req, res) => {
+  page('/:key/test', async (req) => {
     this.state.key = req.params.key
-    const response = await api(`/assignment/${req.params.key}`)
-    if (response.ok && response.data.status === 'pending') this.render({ page: 'test' })
-    else this.render({ page: 'error', error: "The link is invalid or outdated." })
+    const response = await api(`/assignment/${this.state.key}/questions`)
+    if (!response.ok) return this.render({ page: 'error', error: "The link is invalid or outdated" })
+    this.render({ questions: response.data, page: 'test' })
+  })
+
+  page('/:key', async (req) => {
+    this.state.key = req.params.key
+    const response = await api(`/assignment/${this.state.key}/questions` )
+    if (!response.ok) return this.render({ page: 'error', error: "The link is invalid or outdated" })
+    this.render({ page: 'introduction' })
   })
 
   page('*', () => this.render({ page: 'error' }))
