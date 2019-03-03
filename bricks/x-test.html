@@ -1,20 +1,25 @@
 <template questions key>
-  <form class="block">
+  <div class="block">
     <ol>
-      <li>Absolutely True</li>
-      <li>True</li>
-      <li>Sometimes True or False</li>
-      <li>False</li>
-      <li>Absolutely False</li>
+      <li><span value=1>1</span><p>Definitely False</p></li>
+      <li><span value=2>2</span><p>Mostly or Probably False</p></li>
+      <li><span value=3>3</span><p>Neither True nor False, or about Equally True or False</p></li>
+      <li><span value=4>4</span><p>Mostly or Probably True</p></li>
+      <li><span value=5>5</span><p>Definitely True</p></li>
     </ol>
 
-    <p>${ this.question }</p>
-    <button on:click="{ this.submit }" value=1>1</button>
-    <button on:click="{ this.submit }" value=2>2</button>
-    <button on:click="{ this.submit }" value=3>3</button>
-    <button on:click="{ this.submit }" value=4>4</button>
-    <button on:click="{ this.submit }" value=5>5</button>
-  </form>
+    <form>
+
+      <p>${ this.question }</p>
+      <nav>
+        <button on:click="this.submit" value=1>1</button>
+        <button on:click="this.submit" value=2>2</button>
+        <button on:click="this.submit" value=3>3</button>
+        <button on:click="this.submit" value=4>4</button>
+        <button on:click="this.submit" value=5>5</button>
+      </nav>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -55,5 +60,45 @@
 </script>
 
 <style>
-  @import url('/assets/css/main.css')
+  @import url('/assets/css/main.css');
+
+  ol {
+    display: flex;
+    justify-content: space-around;
+  }
+  ol li {
+    display: block;
+    text-align: center;
+    max-width: 14rem;
+  }
+  ol li span {
+    display: inline-block;
+    margin: 0 auto;
+    padding: .2rem .6rem;
+    border: 1px solid #ccc;
+    border-radius: .2rem;
+  }
+
+  form {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    border-top: 1px solid #eee;
+    max-width: 60rem;
+    margin: 2rem auto;
+    min-height: 8rem;
+    padding-top: 2rem;
+  }
+  form p,
+  form button {
+    font-size: 1.1rem;
+    margin-top: 0;
+  }
+  form nav {
+    display: flex;
+  }
+  form button:hover {
+    background-color: var(--light-color);
+    color: #fff;
+  }
 </style>
