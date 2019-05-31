@@ -28,6 +28,11 @@
     questions: [],
   })
 
+  page('*', (req, next) => {
+    document.body.onbeforeunload = null
+    next()
+  })
+
   page('/end', () => this.render({ page: 'end' }))
 
   page('/:key/test', async (req) => {
@@ -35,6 +40,7 @@
     const response = await api(`/assignment/${this.state.key}/questions`)
     if (!response.ok) return this.render({ page: 'error', error: "The link is invalid or outdated" })
     this.render({ questions: response.data, page: 'test' })
+    document.body.onbeforeunload = () => confirm('You are in the middle of the test and you will have to start over. Are you sure you want to quit?')
   })
 
   page('/:key', async (req) => {
