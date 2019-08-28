@@ -1,6 +1,6 @@
 <!doctype html>
 <meta charset=utf8>
-<title>TCI — Run your personality test</title>
+<title>TCI — Take your personality test</title>
 
 <link rel=stylesheet href=/assets/css/main.css>
 
@@ -11,10 +11,14 @@
 <script src=/assets/vendors/page.min.js></script>
 <script src="/assets/js/utils.js"></script>
 <script src="/config.js"></script>
-<script type=module src=dist/bricks.js></script>
 
 <script>
   function api (uri, options = {}) {
     return request(`${config.apiUrl}${uri}`, options)
   }
+
+  const bricks = document.createElement('script')
+    bricks.src = `dist/bricks.js?${Math.random()}`
+    bricks.type = 'module'
+    document.head.append(bricks)
 </script>
