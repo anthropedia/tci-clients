@@ -3,6 +3,10 @@
     <h1 id=logo>
       <img src=https://assets.tci.anthropedia.org/images/anthropedia.svg alt="Anthropedia Foundation">
     </h1>
+    <section id=language>
+      <button value=en on:click="this.switchLanguage"><img alt=English title=English src=https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg></button>
+      <button value=se on:click="this.switchLanguage"><img alt=Swedish title=Swedish src=https://upload.wikimedia.org/wikipedia/commons/4/4c/Flag_of_Sweden.svg></button>
+    </section>
   </header>
 
   <main>
@@ -14,8 +18,7 @@
   </main>
 
   <footer>
-    ANTHROPEDIA™ FOUNDATION is a U.S. registered 501(c)(3) tax-deductible nonprofit charity<br>
-    ©2019 ANTHROPEDIA™ FOUNDATION all rights reserved.
+    ${ _('ANTHROPEDIA™ FOUNDATION is a U.S. registered 501(c)(3) tax-deductible nonprofit charity<br>©2019 ANTHROPEDIA™ FOUNDATION all rights reserved.') }
   </footer>
 </template>
 
@@ -52,7 +55,14 @@
 
   page('*', () => this.render({ page: 'error' }))
 
-  page({ hashbang: true })
+  init(() => {
+    page({ hashbang: true })
+  })
+
+  this.switchLanguage = (event) => {
+    localStorage.language = event.currentTarget.value
+    window.location.reload()
+  }
 </script>
 
 <style>
@@ -77,5 +87,23 @@
     color: white;
     padding: 1rem;
     font-size: .6rem;
+  }
+
+  header {
+    display: flex;
+  }
+  #language {
+    flex: 1;
+    align-self: center;
+    text-align: right;
+  }
+  #language button {
+    max-width: 2rem;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+  #language img {
+    width: 100%;
   }
 </style>

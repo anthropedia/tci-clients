@@ -17,6 +17,17 @@
     return request(`${config.apiUrl}${uri}`, options)
   }
 
+  async function init (ready) {
+    const language = localStorage.language || 'en'
+    const response = await api(`/i18n/${language}`)
+    window.trans = response.data
+    ready()
+  }
+
+  function _ (text) {
+    return window.trans[text] || text
+  }
+
   const bricks = document.createElement('script')
     bricks.src = `dist/bricks.js?${Math.random()}`
     bricks.type = 'module'
