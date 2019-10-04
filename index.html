@@ -25,7 +25,8 @@
   }
 
   function _ (text) {
-    return window.trans[text] || text
+    if (window.trans && window.trans[text]) return window.trans[text]
+    return text
   }
 
   const bricks = document.createElement('script')

@@ -34,9 +34,8 @@
     question: ''
   })
 
-  this.changed = () => {
-    this.state.question = this.state.questions[0]
-    this.render()
+  this.connected = () => {
+    this.render({ question: this.state.questions[0] })
   }
 
   this.submit = (event) => {
