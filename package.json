@@ -16,7 +16,7 @@
   "author": "Vincent Agnano",
   "license": "MIT",
   "dependencies": {
-    "@polight/lego": "^0.11.0",
+    "@polight/lego": "^0.11.1",
     "jsdom": "*"
   },
   "devDependencies": {

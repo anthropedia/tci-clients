@@ -35,7 +35,10 @@
   })
 
   this.connected = () => {
-    this.render({ question: this.state.questions[0] })
+    const question = this.state.questions[0]
+    // HACK: When coming from the instructions page, the questions array is empty.
+    if (!question) window.location.reload()
+    else this.render({ question })
   }
 
   this.submit = (event) => {
