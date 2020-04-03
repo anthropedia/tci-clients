@@ -1,10 +1,16 @@
-<template key>
+<template>
   <div class="block">
     <h1>${ _('Welcome to the TCI') }</h1>
     ${ _('clients.introduction') }
-    <a class=button href="/${this.key}/test">${ _('I agree; start the test') }</a>
+    <a class=button href="/${state.key}/test">${ _('I agree; start the test') }</a>
   </div>
 </template>
+
+<script>
+  init() {
+    this.state = { key: '' }
+  }
+</script>
 
 <style>
   @import url('/assets/css/main.css')

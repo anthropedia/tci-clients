@@ -54,8 +54,8 @@
     return text
   }
 
-  const bricks = document.createElement('script')
-    bricks.src = `dist/bricks.js?${Math.random()}`
-    bricks.type = 'module'
-    document.head.append(bricks)
+  const script = document.createElement('script')
+    script.src = `dist/index.js?${Math.random()}`
+    script.type = 'module'
+    document.head.append(script)
 </script>

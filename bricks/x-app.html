@@ -4,65 +4,74 @@
       <img src=https://assets.tci.anthropedia.org/images/anthropedia.svg alt="Anthropedia Foundation">
     </h1>
     <section id=language>
-      <button value=en on:click="this.switchLanguage"><img alt=English title=English src=https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg></button>
-      <button value=fr on:click="this.switchLanguage"><img alt=Français title=Français src=https://upload.wikimedia.org/wikipedia/commons/4/4a/Flag_of_France_%281790%E2%80%931794%29.svg></button>
-      <button value=se on:click="this.switchLanguage"><img alt=Swedish title=Swedish src=https://upload.wikimedia.org/wikipedia/commons/4/4c/Flag_of_Sweden.svg></button>
+      <button value=en @click="switchLanguage"><img alt=English title=English src=https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg></button>
+      <button value=fr @click="switchLanguage"><img alt=Français title=Français src=https://upload.wikimedia.org/wikipedia/commons/4/4a/Flag_of_France_%281790%E2%80%931794%29.svg></button>
+      <button value=se @click="switchLanguage"><img alt=Swedish title=Swedish src=https://upload.wikimedia.org/wikipedia/commons/4/4c/Flag_of_Sweden.svg></button>
     </section>
   </header>
 
   <main>
-    <x-introduction :if="this.page === 'introduction'" key="${ this.key }"></x-introduction>
-    <x-test :if="this.page === 'test'" key="${ this.key }" questions="${ this.questions }"></x-test>
-    <x-end :if="this.page === 'end'"></x-end>
-    <error-404 :if="this.page === 'error'" error="${ this.error }"></error-404>
-    <p
+    <x-introduction :if="state.page === ''" :key="state.key"></x-introduction>
+    <x-test :if="state.page === 'test'" :key="state.key" :questions="state.questions"></x-test>
+    <x-end :if="state.page === 'end'"></x-end>
+    <error-404 :if="state.page === 'error'" :error="state.error"></error-404>
   </main>
 
   <footer>
-    ${ _('ANTHROPEDIA™ FOUNDATION is a U.S. registered 501(c)(3) tax-deductible nonprofit charity<br>©2019 ANTHROPEDIA™ FOUNDATION all rights reserved.') }
+    ${ _('ANTHROPEDIA™ FOUNDATION is a U.S. registered 501(c)(3) tax-deductible nonprofit charity — ©2019 ANTHROPEDIA™ FOUNDATION all rights reserved.') }
   </footer>
 </template>
 
 <script>
-  this.setState({
-    page: '',
-    clients: [],
-    clientId: null,
-    user: {},
-    questions: [],
-  })
+  init() {
+    this.state = {
+      page: '',
+      clients: [],
+      clientId: null,
+      user: {},
+      questions: [],
+    }
 
-  page('*', (req, next) => {
-    document.body.onbeforeunload = null
-    next()
-  })
+    page('*', (req, next) => {
+      document.body.onbeforeunload = null
+      next()
+    })
 
-  page('/end', () => this.render({ page: 'end' }))
+    page('/end', () => this.state.page = 'end')
 
-  page('/:key/test', async (req) => {
-    this.state.key = req.params.key
-    const response = await api(`/assignment/${this.state.key}/questions`)
-    if (!response.ok) return this.render({ page: 'error', error: "The link is invalid or outdated" })
-    this.render({ questions: response.data, page: 'test' })
-    document.body.onbeforeunload = () => confirm('You are in the middle of the test and you will have to start over. Are you sure you want to quit?')
-  })
+    page('/:key/test', async (req) => {
+      this.state.key = req.params.key
+      const response = await api(`/assignment/${this.state.key}/questions`)
+      if (!response.ok) {
+        this.state.page = 'error'
+        this.state.error = "The link is invalid or outdated"
+        return
+      }
+      this.state.questions = response.data
+      this.state.page = 'test'
+      document.body.onbeforeunload = () => confirm('You are in the middle of the test and you will have to start over. Are you sure you want to quit?')
+      this.render()
+    })
 
-  page('/:key', async (req) => {
-    this.state.key = req.params.key
-    const response = await api(`/assignment/${this.state.key}/questions` )
-    if (!response.ok) return this.render({ page: 'error', error: "The link is invalid or outdated" })
-    this.render({ page: 'introduction' })
-  })
+    page('/:key', async (req) => {
+      this.state.key = req.params.key
+      const response = await api(`/assignment/${this.state.key}/questions` )
+      if (!response.ok) {
+        this.state.page = 'error'
+        this.state.error = "The link is invalid or outdated"
+        return
+      }
+      this.state.page = ''
+    })
 
-  page('*', () => this.render({ page: 'error' }))
+    page('*', () => this.state.page = 'error')
 
-  init(() => {
-    page({ hashbang: true })
-  })
+    window.init(() => page({ hashbang: true }))
+  }
 
-  this.switchLanguage = (event) => {
+  switchLanguage(event) {
     localStorage.language = event.currentTarget.value
-    window.location.reload()
+    debugger
   }
 </script>
 

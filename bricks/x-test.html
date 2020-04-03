@@ -10,38 +10,42 @@
 
     <form>
 
-      <p>${ _(this.question) }</p>
+      <p>${ _(state.question) }</p>
       <nav>
-        <button on:click="this.submit" value=1>1</button>
-        <button on:click="this.submit" value=2>2</button>
-        <button on:click="this.submit" value=3>3</button>
-        <button on:click="this.submit" value=4>4</button>
-        <button on:click="this.submit" value=5>5</button>
+        <button @click="submit" value=1>1</button>
+        <button @click="submit" value=2>2</button>
+        <button @click="submit" value=3>3</button>
+        <button @click="submit" value=4>4</button>
+        <button @click="submit" value=5>5</button>
       </nav>
     </form>
   </div>
 </template>
 
 <script>
-  this.index = 0
-  this.time = null
-  this.times = []
-  this.time = new Date()
-  this.answers = []
-  this.setState({
-    key: "",
-    questions: [],
-    question: ''
-  })
-
-  this.connected = () => {
-    const question = this.state.questions[0]
-    // HACK: When coming from the instructions page, the questions array is empty.
-    if (!question) window.location.reload()
-    else this.render({ question })
+  init() {
+    this.index = 0
+    this.time = null
+    this.times = []
+    this.time = new Date()
+    this.answers = []
+    this.state = {
+      key: "",
+      questions: [],
+      question: ''
+    }
   }
 
-  this.submit = (event) => {
+  connected() {
+    const question = this.state.questions[0]
+    debugger
+    // HACK: When coming from the instructions page, the questions array is empty.
+    if (!question) debugger
+    else this.state.question = question
+    this.render()
+  }
+
+  submit(event) {
     event.preventDefault()
     const duration = (new Date()) - this.time
     if (duration < 600) return
@@ -50,10 +54,10 @@
     this.time = new Date()
     if (this.state.questions.length <= this.index + 1) return this.send()
     this.index++
-    this.render({ question: this.state.questions[this.index] })
+    this.state.question = this.state.questions[this.index]
   }
 
-  this.send = async () => {
+  async send() {
     const data = { answers: this.answers, times: this.times }
     const response = await api(`/assignment/${this.state.key}/complete`, { data })
     if (!response.ok) return alert(_("Can't save your data right now. Keep this window and try a little later."))
