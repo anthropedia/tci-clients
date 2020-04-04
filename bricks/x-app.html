@@ -11,10 +11,10 @@
   </header>
 
   <main>
-    <x-introduction :if="state.page === ''" :key="state.key"></x-introduction>
-    <x-test :if="state.page === 'test'" :key="state.key" :questions="state.questions"></x-test>
-    <x-end :if="state.page === 'end'"></x-end>
+    <x-end :if="state.page === 'end'" :key="state.key"></x-end>
     <error-404 :if="state.page === 'error'" :error="state.error"></error-404>
+    <x-test :if="state.page === 'test'" :key="state.key" :questions="state.questions"></x-test>
+    <x-introduction :if="state.page === 'introduction'" :key="state.key"></x-introduction>
   </main>
 
   <footer>
@@ -23,9 +23,10 @@
 </template>
 
 <script>
-  init() {
+  async init() {
     this.state = {
       page: '',
+      language: '',
       clients: [],
       clientId: null,
       user: {},
@@ -50,7 +51,6 @@
       this.state.questions = response.data
       this.state.page = 'test'
       document.body.onbeforeunload = () => confirm('You are in the middle of the test and you will have to start over. Are you sure you want to quit?')
-      this.render()
     })
 
     page('/:key', async (req) => {
@@ -61,17 +61,33 @@
         this.state.error = "The link is invalid or outdated"
         return
       }
-      this.state.page = ''
+      this.state.page = 'introduction'
     })
 
-    page('*', () => this.state.page = 'error')
+    page('*', () => {
+      this.state.page = 'error'
+      this.state.error = 'The URL is broken, the page does not exist.'
+    })
 
-    window.init(() => page({ hashbang: true }))
+    await loadLanguage()
+
+    page({ hashbang: true })
+  }
+
+  page(name) {
+    return this.state.page === name
+  }
+
+  loadLanguage() {
+    const language = localStorage.language || 'en'
+    const request = await api(`/i18n/${language}/clients`)
+    window.trans = request.data
+    this.state.language = language
   }
 
   switchLanguage(event) {
     localStorage.language = event.currentTarget.value
-    debugger
+    this.loadLanguage()
   }
 </script>
 

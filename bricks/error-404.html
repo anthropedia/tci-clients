@@ -1,10 +1,16 @@
 <template>
   <div class=block>
     <h1>${ _("Can't access the page") }</h1>
-    <p :if="!this.error">${ _('The page does not exist.') }</p>
-    <p :if="this.error">${ _(this.error) }.</p>
+    <p :if="!state.error">${ _('The page does not exist.') }</p>
+    <p :if="state.error">${ _(state.error) }</p>
   </div>
 </template>
+
+<script>
+  init() {
+    this.state = { error: '' }
+  }
+</script>
 
 <style>
   @import url('/assets/css/main.css');

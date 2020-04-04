@@ -37,12 +37,7 @@
   }
 
   connected() {
-    const question = this.state.questions[0]
-    debugger
-    // HACK: When coming from the instructions page, the questions array is empty.
-    if (!question) debugger
-    else this.state.question = question
-    this.render()
+    this.state.question = this.state.questions[0]
   }
 
   submit(event) {

@@ -42,13 +42,6 @@
     return request(`${config.apiUrl}${uri}`, options)
   }
 
-  async function init (ready) {
-    const language = localStorage.language || 'en'
-    const request = await api(`/i18n/${language}/clients`)
-    window.trans = request.data
-    ready()
-  }
-
   function _ (text) {
     if (window.trans && window.trans[text]) return window.trans[text]
     return text
