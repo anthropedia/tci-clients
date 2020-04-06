@@ -1,7 +1,7 @@
 <template page>
   <header>
     <h1 id=logo>
-      <a href="/${state.token}"><img src=https://assets.tci.anthropedia.org/images/anthropedia.svg alt="Anthropedia Foundation"></a>
+      <a :href="state.token ? `/${state.token}` : '/'"><img src=https://assets.tci.anthropedia.org/images/anthropedia.svg alt="Anthropedia Foundation"></a>
     </h1>
     <section id=language :if="state.page === 'introduction'">
       <button value=en @click="switchLanguage"><img alt=English title=English src=https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg></button>
@@ -125,6 +125,7 @@
     cursor: pointer;
   }
   #language img {
-    width: 100%;
+    width: 26px;
+    height: 18px;
   }
 </style>
