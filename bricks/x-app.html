@@ -1,9 +1,9 @@
 <template page>
   <header>
     <h1 id=logo>
-      <img src=https://assets.tci.anthropedia.org/images/anthropedia.svg alt="Anthropedia Foundation">
+      <a href="/${state.token}"><img src=https://assets.tci.anthropedia.org/images/anthropedia.svg alt="Anthropedia Foundation"></a>
     </h1>
-    <section id=language>
+    <section id=language :if="state.page === 'introduction'">
       <button value=en @click="switchLanguage"><img alt=English title=English src=https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg></button>
       <button value=fr @click="switchLanguage"><img alt=Français title=Français src=https://upload.wikimedia.org/wikipedia/commons/4/4a/Flag_of_France_%281790%E2%80%931794%29.svg></button>
       <button value=se @click="switchLanguage"><img alt=Swedish title=Swedish src=https://upload.wikimedia.org/wikipedia/commons/4/4c/Flag_of_Sweden.svg></button>
@@ -11,14 +11,14 @@
   </header>
 
   <main>
-    <x-end :if="state.page === 'end'" :key="state.key"></x-end>
+    <x-introduction :if="state.page === 'introduction'" :token="state.token"></x-introduction>
+    <x-test :if="state.page === 'test'" :token="state.token" :questions="state.questions"></x-test>
+    <x-end :if="state.page === 'end'" :token="state.token"></x-end>
     <error-404 :if="state.page === 'error'" :error="state.error"></error-404>
-    <x-test :if="state.page === 'test'" :key="state.key" :questions="state.questions"></x-test>
-    <x-introduction :if="state.page === 'introduction'" :key="state.key"></x-introduction>
   </main>
 
   <footer>
-    ${ _('ANTHROPEDIA™ FOUNDATION is a U.S. registered 501(c)(3) tax-deductible nonprofit charity — ©2019 ANTHROPEDIA™ FOUNDATION all rights reserved.') }
+    ${ _('ANTHROPEDIA™ FOUNDATION is a U.S. registered 501(c)(3) tax-deductible nonprofit charity — ©2020 ANTHROPEDIA™ FOUNDATION all rights reserved.') }
   </footer>
 </template>
 
@@ -26,7 +26,6 @@
   async init() {
     this.state = {
       page: '',
-      language: '',
       clients: [],
       clientId: null,
       user: {},
@@ -40,9 +39,9 @@
 
     page('/end', () => this.state.page = 'end')
 
-    page('/:key/test', async (req) => {
-      this.state.key = req.params.key
-      const response = await api(`/assignment/${this.state.key}/questions`)
+    page('/:token/test', async (req) => {
+      this.state.token = req.params.token
+      const response = await api(`/assignment/${this.state.token}/questions`)
       if (!response.ok) {
         this.state.page = 'error'
         this.state.error = "The link is invalid or outdated"
@@ -53,9 +52,9 @@
       document.body.onbeforeunload = () => confirm('You are in the middle of the test and you will have to start over. Are you sure you want to quit?')
     })
 
-    page('/:key', async (req) => {
-      this.state.key = req.params.key
-      const response = await api(`/assignment/${this.state.key}/questions` )
+    page('/:token', async (req) => {
+      this.state.token = req.params.token
+      const response = await api(`/assignment/${this.state.token}/questions` )
       if (!response.ok) {
         this.state.page = 'error'
         this.state.error = "The link is invalid or outdated"
@@ -69,25 +68,21 @@
       this.state.error = 'The URL is broken, the page does not exist.'
     })
 
-    await loadLanguage()
+    await this.loadLanguage()
 
     page({ hashbang: true })
   }
 
-  page(name) {
-    return this.state.page === name
-  }
-
-  loadLanguage() {
+  async loadLanguage() {
     const language = localStorage.language || 'en'
     const request = await api(`/i18n/${language}/clients`)
     window.trans = request.data
-    this.state.language = language
   }
 
-  switchLanguage(event) {
+  async switchLanguage(event) {
     localStorage.language = event.currentTarget.value
-    this.loadLanguage()
+    await this.loadLanguage()
+    location.reload()
   }
 </script>
 

@@ -1,17 +1,17 @@
 <template>
   <article class="block">
     <h1>${ _('Welcome to the TCI') }</h1>
-    <div>${ _('clients.introduction') }</div>
-    <a class=button href="/${state.key}/test">${ _('I agree; start the test') }</a>
+    <raw-html>${ _('clients.introduction') }</raw-html>
+    <a class=button href="/${state.token}/test">${ _('I agree; start the test') }</a>
   </article>
 </template>
 
 <script>
   init() {
-    this.state = { key: '' }
+    this.state = { token: '' }
   }
 </script>
 
 <style>
-  @import url('/assets/css/main.css')
+  @import url('/assets/css/main.css');
 </style>
